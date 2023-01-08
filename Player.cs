@@ -12,7 +12,7 @@ namespace Marekkia
         // CREATE PLAYER IMAGE BUTTON (BITMAP) AND ALL ATTRIBUTES LIKE MarekkiaStorage, Accumulator, Stats, etc..
 
         MarekkiaStorage _playerStorage;
-        Accumulator _playerAccum;
+        private Accumulator _playerAccum;
 
 
         public Player(int row, int col)
@@ -34,6 +34,12 @@ namespace Marekkia
         public BitmapImage PlayerImage
         {
             get { return Image; }
+        }
+
+        public Accumulator PlayerAccum
+        {
+            get { return _playerAccum; }
+            set { _playerAccum = value;}
         }
 
     }

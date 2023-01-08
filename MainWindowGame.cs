@@ -44,7 +44,8 @@ namespace Marekkia
 
         private int _playersQty;
 
-        private BitmapImage _currentCell;
+        private CellModel _currentCell;
+        private BitmapImage _currentCellImage;
         private bool _currentCellChanged = false;
 
         private bool _validatedStep = true;
@@ -191,7 +192,13 @@ namespace Marekkia
                             {
                                 isPlayerIndex = true;
                                 playerIndexAssigned = true;
+
                                 _player = new Player(r, c);
+                                this.CurrentCell = _player;
+
+                                // set default arrow key for no-arrowed cell (8).
+                                this.CurrentCell.ArrowKey = 8;
+
                                 PutSingleModelIntoARow(_player);
                             }
 
@@ -274,12 +281,24 @@ namespace Marekkia
                 Player plycell = (Player)VisibleBoard.Find(p => p is Player);
 
                 if (_validatedStep = ValidateStep(plycell, row, col))
-                {
+                { 
+
+                    int direction = getPlayerDirection(plycell.Row, plycell.Col, row, col);
+
+                    // Accumulate the instruction if player's direction doesn't match with
+                    // the cell arrow. Also ignore not-arrowed cells.
+
+                    if (direction != CurrentCell.ArrowKey && CurrentCell.ArrowKey != 8)
+                    {
+                        plycell.PlayerAccum.Instructions.Add(CurrentCell.ArrowKey);
+                    }
+
                     RemoveOldPlayerCell(plycell, MainBoard);
                     plycell.Row = row;
                     plycell.Col = col;
                     MainBoard.Find(c => c.Row == row && c.Col == col).Add(plycell);
                     TakeVisibleMainboardValues();
+
                 }
 
             }
@@ -305,6 +324,41 @@ namespace Marekkia
             _timer = new Stopwatch();    
             _timer.Start();
             _initTime = (int) _timer.ElapsedMilliseconds / 1000;
+        }
+
+        // Directions
+
+
+        /// <summary>
+        /// Get the direction the player moved to with a numeric index.
+        /// </summary>
+        /// <param name="oldRow"></param>
+        /// <param name="oldCol"></param>
+        /// <param name="newRow"></param>
+        /// <param name="newCol"></param>
+        /// <returns></returns>
+        private int getPlayerDirection(int oldRow, int oldCol, int newRow, int newCol)
+        {
+
+            if (oldRow == newRow + 1 && oldCol == newCol)
+                return 0;
+            else if (oldRow == newRow - 1 && oldCol == newCol)
+                return 1;
+            else if (oldRow == newRow && oldCol == newCol - 1)
+                return 2;
+            else if (oldRow == newRow && oldCol == newCol + 1)
+                return 3;
+            else if (oldRow == newRow - 1 && oldCol == newCol - 1)
+                return 4;
+            else if (oldRow == newRow - 1 && oldCol == newCol + 1)
+                return 5;
+            else if (oldRow == newRow + 1 && oldCol == newCol - 1)
+                return 6;
+            else if (oldRow == newRow + 1 && oldCol == newCol + 1)
+                return 7;
+            else
+                return 8;
+
         }
 
         // Properties
@@ -393,17 +447,23 @@ namespace Marekkia
             set { _landTime = value; OnPropertyChanged("LandTime"); }
         }
 
-        public BitmapImage CurrentCell
+        public BitmapImage CurrentCellImage
         {
-            get { return _currentCell; }
+            get { return _currentCellImage; }
             set {
 
                 if (_validatedStep)
-                    _currentCell = value; 
+                    _currentCellImage = value; 
 
-                OnPropertyChanged("CurrentCell");
+                OnPropertyChanged("CurrentCellImage");
 
                 }
+        }
+
+        public CellModel CurrentCell
+        {
+            get { return _currentCell; }
+            set { _currentCell = value; }
         }
 
         public bool CurrentCellChanged

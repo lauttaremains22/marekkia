@@ -62,7 +62,7 @@
                 <Grid Grid.Row="0" Grid.Column="1">
                     <Canvas>
                         <Label Content="Current Cell: " Canvas.Left="0" Canvas.Top="10"/>
-                        <Image x:Name="imgImage" Stretch="Fill" Canvas.Top="40" Canvas.Left="25" Width="32" Height="30" Source="{Binding CurrentCell}"/>
+                        <Image x:Name="imgImage" Stretch="Fill" Canvas.Top="40" Canvas.Left="25" Width="32" Height="30" Source="{Binding CurrentCellImage}"/>
                     </Canvas>
                 </Grid>
 

@@ -69,7 +69,9 @@ namespace Marekkia
             var cellModel = ((Button)sender).DataContext as CellModel;
 
             ((MainWindowGame)this.DataContext).ChangePlayerCell(cellModel.Row, cellModel.Col);
-            ((MainWindowGame)this.DataContext).CurrentCell = cellModel.Image;
+
+            ((MainWindowGame)this.DataContext).CurrentCell = cellModel;
+            ((MainWindowGame)this.DataContext).CurrentCellImage = cellModel.Image;
             ((MainWindowGame)this.DataContext).CurrentCellChanged = true;
 
 
