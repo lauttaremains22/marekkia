@@ -22,8 +22,8 @@
             <ToolBar x:Name="toolbBottom" Width="270" VerticalAlignment="Top" Height="48">
                 <Canvas>
                     <Label Content="Write an instruction: " Canvas.Left="0" Canvas.Top="10"/>
-                    <TextBox Width="70" Canvas.Left="120" Canvas.Top="10" Margin="0,2,0,0" Height="22"/>
-                    <Button Content="Send" Width="50" Height="22" Background="Bisque" 
+                    <TextBox Name="InstructionInput" Width="70" Canvas.Left="120" Canvas.Top="10" Margin="0,2,0,0" Height="22"/>
+                    <Button PreviewMouseLeftButtonDown="InstructionButton_Click" Content="Send" Width="50" Height="22" Background="Bisque" 
                             BorderBrush="Black" BorderThickness="2" Canvas.Left="200" Canvas.Top="12"></Button>
                 </Canvas>
             </ToolBar>

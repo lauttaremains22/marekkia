@@ -80,6 +80,12 @@ namespace Marekkia
 
         }
 
+        private void InstructionButton_Click(object sender, MouseButtonEventArgs e)
+        {
+            string instructionInput = InstructionInput.Text;
+            Console.WriteLine(instructionInput);
+        }
+
 
     }
 }
