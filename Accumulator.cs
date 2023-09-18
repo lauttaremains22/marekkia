@@ -9,41 +9,23 @@ namespace Marekkia
     public class Accumulator
     {
 
-        private List<int> _instructions;
-
-        private Dictionary<int, string> translator = new Dictionary<int, string>()
-        {
-            {0, "NORTH_ARROW"},
-            {1, "SOUTH_ARROW"},
-            {2, "EAST_ARROW"},
-            {3, "WEST_ARROW"},
-            {4, "NORTH_EAST_ARROW"},
-            {5, "NORTH_WEST_ARROW"},
-            {6, "SOUTH_EAST_ARROW"},
-            {7, "SOUTH_WEST_ARROW"},
-            {8, "DEFAULT"}
-        };
-
-        private List<string> translatedInstr = new List<string>();
+        List<CellModel> _instructions = new List<CellModel>();
 
 
         public Accumulator()
         {
-            _instructions = new List<int>();
+            _instructions = new List<CellModel>();
         }
 
-        public List<int> Instructions
+        public List<CellModel> Instructions
         {
             get { return _instructions; }
             set { _instructions = value; }
         }
 
-        public void SetInstruction(int instruction)
+        public void SetModel(CellModel model)
         {
-            _instructions.Add(instruction);
-
-            string translated = translator.GetValueOrDefault(instruction);
-            translatedInstr.Add(translated);
+            _instructions.Add(model);
         }
     }
 }

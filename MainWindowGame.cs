@@ -296,7 +296,7 @@ namespace Marekkia
                     {
                         if (direction != CurrentCell.ArrowKey && CurrentCell.ArrowKey != 8)
                         {
-                            plycell.PlayerAccum.SetInstruction(CurrentCell.ArrowKey);
+                            plycell.PlayerAccum.SetModel(CurrentCell);
                             AccumArrowsQty = plycell.PlayerAccum.Instructions.Count;
                         }
                     }
@@ -391,7 +391,7 @@ namespace Marekkia
             {
                 if (input.Equals("F"))
                 {
-                    _player.PlayerAccum.SetInstruction(CurrentCell.ArrowKey);
+                    _player.PlayerAccum.SetModel(CurrentCell);
                     AccumArrowsQty = _player.PlayerAccum.Instructions.Count;
                     CurrentCell.ForcedAction = true;
                 }
