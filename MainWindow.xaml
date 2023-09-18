@@ -14,6 +14,8 @@
                 <TextBox x:Name="timebox" Text="{Binding LandTime}" Width="40" Height="15" BorderBrush="Black" HorizontalAlignment="Left"/>
                 <Button x:Name="playBtn" Margin="10,2,0,0" Width="50" Content="Play"
                        Height="22" BorderBrush="Black" BorderThickness="2" Background="Aquamarine"></Button>
+                <Label x:Name="accum" Content="Accum. Arrows: " Width="90" Height="26"/>
+                <TextBox x:Name="accumbox" Text="{Binding AccumArrowsQty}" Width="40" Height="15" BorderBrush="Black" HorizontalAlignment="Left"/>
             </ToolBar>
         </ToolBarTray>
         <ToolBarTray DockPanel.Dock="Bottom" Height="50" VerticalAlignment="Bottom">

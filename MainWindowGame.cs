@@ -19,7 +19,7 @@ namespace Marekkia
     /// </summary>
     public class MainWindowGame : INotifyPropertyChanged
     {
-    
+
         private Dictionary<int, BitmapImage> instructions = new Dictionary<int, BitmapImage>();
         //const int SMALL_SIZE = 6, MEDIUM_SIZE = 8, LARGE_SIZE = 10;
         int _rows, _columns;
@@ -51,7 +51,9 @@ namespace Marekkia
         private bool _validatedStep = true;
 
         private Stopwatch _timer;
+
         private int _initTime, _endTime, _landTime, _totalTime;
+        private int _accumArrowsQty;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -78,12 +80,13 @@ namespace Marekkia
         /// </summary>
         private void LoadImages()
         {
-            
+
             BitmapImage northArrowIMG = new BitmapImage();
             northArrowIMG.BeginInit();
             northArrowIMG.CacheOption = BitmapCacheOption.OnLoad;
             northArrowIMG.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
             northArrowIMG.UriSource = new Uri(AppDomain.CurrentDomain.BaseDirectory + "north arrow.png", UriKind.Absolute);
+            Console.WriteLine("north arrow path: " + AppDomain.CurrentDomain.BaseDirectory);
             northArrowIMG.EndInit();
 
             BitmapImage southArrowIMG = new BitmapImage();
@@ -150,7 +153,7 @@ namespace Marekkia
         /// </summary>
         private void Init()
         {
-           
+
             Random arrowGenerator = new Random();
             Random playerIndexGenerator = new Random();
             Random targetIndexGenerator = new Random();
@@ -206,7 +209,7 @@ namespace Marekkia
 
                         }
 
-                    }                  
+                    }
 
                     if (!isPlayerIndex && !isTargetIndex)
                     {
@@ -244,7 +247,7 @@ namespace Marekkia
         }
 
         private void PutSingleModelIntoARow(CellModel cell)
-        {                   
+        {
 
             CellModels cellModels = new CellModels();
 
@@ -256,32 +259,33 @@ namespace Marekkia
 
         private void TakeVisibleMainboardValues()
         {
-            try 
+            try
             {
                 List<CellModel> localVisibleBoard = new List<CellModel>();
 
                 foreach (CellModels cells in MainBoard)
                 {
-                        cells.Row = cells[cells.Count - 1].Row;
-                        cells.Col = cells[cells.Count - 1].Col;
-                        localVisibleBoard.Add(cells[cells.Count - 1]);
-                        Console.WriteLine("ppapapap");                  
+                    cells.Row = cells[cells.Count - 1].Row;
+                    cells.Col = cells[cells.Count - 1].Col;
+                    localVisibleBoard.Add(cells[cells.Count - 1]);
+                    Console.WriteLine("ppapapap");
                 }
 
                 VisibleBoard = localVisibleBoard;
 
-            } catch { }
+            }
+            catch { }
 
         }
 
-        public void ChangePlayerCell(int row, int col)
+        public bool ChangePlayerCell(int row, int col)
         {
             try
             {
                 Player plycell = (Player)VisibleBoard.Find(p => p is Player);
 
                 if (_validatedStep = ValidateStep(plycell, row, col))
-                { 
+                {
 
                     int direction = getPlayerDirection(plycell.Row, plycell.Col, row, col);
 
@@ -290,7 +294,8 @@ namespace Marekkia
 
                     if (direction != CurrentCell.ArrowKey && CurrentCell.ArrowKey != 8)
                     {
-                        plycell.PlayerAccum.Instructions.Add(CurrentCell.ArrowKey);
+                        plycell.PlayerAccum.SetInstruction(CurrentCell.ArrowKey);
+                        AccumArrowsQty = plycell.PlayerAccum.Instructions.Count;
                     }
 
                     RemoveOldPlayerCell(plycell, MainBoard);
@@ -299,11 +304,15 @@ namespace Marekkia
                     MainBoard.Find(c => c.Row == row && c.Col == col).Add(plycell);
                     TakeVisibleMainboardValues();
 
+                    return true;
+
                 }
 
             }
-            catch {}
-       
+            catch { }
+
+            return false;
+
         }
 
         private void RemoveOldPlayerCell(Player targetPly, List<CellModels> mainboard)
@@ -313,17 +322,21 @@ namespace Marekkia
 
         private bool ValidateStep(Player p, int newRow, int newCol)
         {
-            if (p.Row > newRow + 1 || p.Row < newRow - 1 || p.Col > newCol + 1 || p.Col < newCol - 1)
+            if (p.Row > newRow + 1 ||
+                p.Row < newRow - 1 ||
+                p.Col > newCol + 1 ||
+                p.Col < newCol - 1 ||
+                (p.Col == newCol && p.Row == newRow))
                 return false;
             else
                 return true;
         }
 
-        public void StartTime() 
+        public void StartTime()
         {
-            _timer = new Stopwatch();    
+            _timer = new Stopwatch();
             _timer.Start();
-            _initTime = (int) _timer.ElapsedMilliseconds / 1000;
+            _initTime = (int)_timer.ElapsedMilliseconds / 1000;
         }
 
         // Directions
@@ -348,13 +361,13 @@ namespace Marekkia
                 return 2;
             else if (oldRow == newRow && oldCol == newCol + 1)
                 return 3;
-            else if (oldRow == newRow - 1 && oldCol == newCol - 1)
-                return 4;
-            else if (oldRow == newRow - 1 && oldCol == newCol + 1)
-                return 5;
             else if (oldRow == newRow + 1 && oldCol == newCol - 1)
-                return 6;
+                return 4;
             else if (oldRow == newRow + 1 && oldCol == newCol + 1)
+                return 5;
+            else if (oldRow == newRow - 1 && oldCol == newCol - 1)
+                return 6;
+            else if (oldRow == newRow - 1 && oldCol == newCol + 1)
                 return 7;
             else
                 return 8;
@@ -362,7 +375,7 @@ namespace Marekkia
         }
 
         // Properties
-    
+
         public Player SpawnedPlayer
         {
             get { return _player; }
@@ -371,7 +384,7 @@ namespace Marekkia
 
         public List<CellModels> MainBoard
         {
-            get 
+            get
             {
                 return _mainBoard;
             }
@@ -390,7 +403,7 @@ namespace Marekkia
             }
             set
             {
-                _visibleBoard = value; 
+                _visibleBoard = value;
                 OnPropertyChanged("VisibleBoard");
             }
         }
@@ -447,17 +460,24 @@ namespace Marekkia
             set { _landTime = value; OnPropertyChanged("LandTime"); }
         }
 
+        public int AccumArrowsQty
+        {
+            get { return _accumArrowsQty; }
+            set { _accumArrowsQty = value; OnPropertyChanged("AccumArrowsQty"); }
+        }
+
         public BitmapImage CurrentCellImage
         {
             get { return _currentCellImage; }
-            set {
+            set
+            {
 
                 if (_validatedStep)
-                    _currentCellImage = value; 
+                    _currentCellImage = value;
 
                 OnPropertyChanged("CurrentCellImage");
 
-                }
+            }
         }
 
         public CellModel CurrentCell
@@ -475,5 +495,6 @@ namespace Marekkia
     }
 
 
-    }
+}
+
 
