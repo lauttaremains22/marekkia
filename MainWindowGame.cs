@@ -381,6 +381,13 @@ namespace Marekkia
 
         }
 
+        public void changeModelStuff(CellModel model)
+        {
+            this.CurrentCell = model;
+            this.CurrentCellImage = model.Image;
+            this.CurrentCellChanged = true;
+        }
+
         public void ProcessInstructionInput(string input)
         {
 
@@ -403,6 +410,15 @@ namespace Marekkia
             {
                 if (input.Equals("D"))
                 {
+                    Accumulator accum = _player.PlayerAccum;
+                    CellModel accumulatedModel = accum.Instructions.First();
+
+                    _player.PlayerAccum.SetModel(CurrentCell);
+                    AccumArrowsQty = _player.PlayerAccum.Instructions.Count;
+                    changeModelStuff(accumulatedModel);
+
+                    accum.Instructions.Remove(accumulatedModel);
+                    AccumArrowsQty = _player.PlayerAccum.Instructions.Count;
 
                 }
             }
