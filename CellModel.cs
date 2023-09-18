@@ -15,6 +15,7 @@ namespace Marekkia
         //private int _arrow = (int) Arrows.DEFAULT;
         private int _arrowKey;
         private string _arrowName;
+        private bool _forcedAction = false;
 
 
 
@@ -77,6 +78,12 @@ namespace Marekkia
         public Dictionary<int, string> Arrows
         {
             get { return arrows; }
+        }
+
+        public bool ForcedAction
+        {
+            get { return _forcedAction; }
+            set { _forcedAction = value; }
         }
 
 

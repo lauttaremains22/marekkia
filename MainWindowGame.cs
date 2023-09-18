@@ -67,6 +67,7 @@ namespace Marekkia
 
             LoadImages();
             Init();
+            FindPlayer();
         }
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -291,11 +292,17 @@ namespace Marekkia
 
                     // Accumulate the instruction if player's direction doesn't match with
                     // the cell arrow. Also ignore not-arrowed cells.
-
-                    if (direction != CurrentCell.ArrowKey && CurrentCell.ArrowKey != 8)
+                    if (!CurrentCell.ForcedAction)
                     {
-                        plycell.PlayerAccum.SetInstruction(CurrentCell.ArrowKey);
-                        AccumArrowsQty = plycell.PlayerAccum.Instructions.Count;
+                        if (direction != CurrentCell.ArrowKey && CurrentCell.ArrowKey != 8)
+                        {
+                            plycell.PlayerAccum.SetInstruction(CurrentCell.ArrowKey);
+                            AccumArrowsQty = plycell.PlayerAccum.Instructions.Count;
+                        }
+                    }
+                    else
+                    {
+                        CurrentCell.ForcedAction = false;
                     }
 
                     RemoveOldPlayerCell(plycell, MainBoard);
@@ -372,6 +379,65 @@ namespace Marekkia
             else
                 return 8;
 
+        }
+
+        public void ProcessInstructionInput(string input)
+        {
+
+            FindPlayer();
+            //FORCED ACCUM.
+
+            if (input.Contains('F'))
+            {
+                if (input.Equals("F"))
+                {
+                    _player.PlayerAccum.SetInstruction(CurrentCell.ArrowKey);
+                    AccumArrowsQty = _player.PlayerAccum.Instructions.Count;
+                    CurrentCell.ForcedAction = true;
+                }
+            }
+
+            //DEACCUMULATION
+
+            if (input.Contains('D'))
+            {
+                if (input.Equals("D"))
+                {
+
+                }
+            }
+
+
+            //SIMPLIFICATION
+
+            if (input.Contains('S'))
+            {
+
+            }
+
+            //REPLACEMENT
+
+            if (input.Contains('R'))
+            {
+
+            }
+
+            //CONVERSION
+
+            if (input.Contains('C'))
+            {
+
+            }
+
+
+        }
+
+        /// <summary>
+        /// Invoke this method everytime you want to get the player in the board after any action.
+        /// </summary>
+        public void FindPlayer()
+        {
+            _player = (Player)VisibleBoard.Find(p => p is Player);
         }
 
         // Properties

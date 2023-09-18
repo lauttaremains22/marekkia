@@ -83,6 +83,8 @@ namespace Marekkia
         private void InstructionButton_Click(object sender, MouseButtonEventArgs e)
         {
             string instructionInput = InstructionInput.Text;
+            ((MainWindowGame)this.DataContext).ProcessInstructionInput(instructionInput);
+            
             Console.WriteLine(instructionInput);
         }
 

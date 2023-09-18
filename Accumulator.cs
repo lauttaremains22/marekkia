@@ -26,6 +26,7 @@ namespace Marekkia
 
         private List<string> translatedInstr = new List<string>();
 
+
         public Accumulator()
         {
             _instructions = new List<int>();
